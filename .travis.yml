@@ -1,0 +1,7 @@
+language: java
+script: ant -Dtest.level=RunLocalTests test
+env:
+   global:
+      - SFURL=$Endpoint
+      - SFUSER=$UserName
+      - SFPASS=$Password
