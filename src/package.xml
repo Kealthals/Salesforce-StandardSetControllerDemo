@@ -3,7 +3,7 @@
     <types>
         <members>StandardSetDemoController</members>
         <members>StandardSetDemoControllerTest</members>
-        <members>webMock</members>
+        <members>WebMock</members>
         <name>ApexClass</name>
     </types>
     <types>
