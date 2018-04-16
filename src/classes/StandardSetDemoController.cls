@@ -1,9 +1,9 @@
 public class StandardSetDemoController {
      
     public ApexPages.StandardSetController con {get;set;}
-    public List<Account> selectedAccList;
+    public List<SObject> selectedObjList;
     public List<Wrapper> wrapperList;
-    public Map<Integer, List<Account>> selectedMap;
+    public Map<Integer, List<SObject>> selectedMap;
     public Boolean checkAllFlg {get;set;}
     private Boolean isKeepSelected = false;
     public List<SelectOption> listViewList {get;set;}
@@ -140,8 +140,8 @@ public class StandardSetDemoController {
             totalPageNo = (con.getResultSize() / pSize) + 1;
             
             if(isKeepSelected) {
-                System.debug(selectedAccList);
-                con.setSelected(selectedAccList);
+                System.debug(selectedObjList);
+                con.setSelected(selectedObjList);
                 isKeepSelected = false;
             }
         }
@@ -149,13 +149,13 @@ public class StandardSetDemoController {
 
     public List<Wrapper> getWrappers() {
         wrapperList = new List<Wrapper>();
-        Set<Account> selectedSet = new Set<Account>((List<Account>)con.getSelected());
+        Set<SObject> selectedSet = new Set<SObject>(con.getSelected());
         Set<Id> selectedIdSet = new Set<Id>();
-        for(Account acc:selectedSet) {
-            selectedIdSet.add(acc.Id);
+        for(SObject obj:selectedSet) {
+            selectedIdSet.add(obj.Id);
         }
-        for(Account acc:(List<Account>)con.getrecords()) {
-            wrapperList.add(new Wrapper(acc, selectedIdSet.contains(acc.Id)));
+        for(SObject obj:con.getrecords()) {
+            wrapperList.add(new Wrapper(obj, selectedIdSet.contains(obj.Id)));
         }
         if(isAllCheck()) {
             checkAllFlg = true;
@@ -166,12 +166,22 @@ public class StandardSetDemoController {
     }
     
     public class Wrapper {
-        public Account acc {get;set;}
+        public SObject obj {get;set;}
         public Boolean isChecked {get;set;}
-        public Wrapper(Account pAcc, Boolean pFlg) {
-            this.acc = pAcc;
+        public List<String> valueList {get;set;} 
+        public Wrapper(SObject pObj, Boolean pFlg) {
+            this.obj = pObj;
             this.isChecked = pFlg;
+            valueList = new List<String>();
+            Map<String ,Object> FVMap = this.obj.getPopulatedFieldsAsMap();
+            //for(String fieldName: FVMap.keyset()) {
+                valueList.add((String)FVMap.get('Id'));
+                valueList.add((String)FVMap.get('Name'));
+            //}
         }
+        public String get(String fName) {
+            return (String)obj.get(fName);
+        } 
     }
 
     public void first() {
@@ -199,35 +209,35 @@ public class StandardSetDemoController {
     }
 
     public void handleSelectedList() {
-        List<Account> currentPageSelected = new List<Account>();
+        List<SObject> currentPageSelected = new List<SObject>();
         for(Wrapper w: wrapperList) {
             if(w.isChecked) {
-                currentPageSelected.add(w.acc);
+                currentPageSelected.add(w.obj);
             }
         }
         if(selectedMap == null) {
-            selectedMap = new Map<Integer, List<Account>>();
+            selectedMap = new Map<Integer, List<SObject>>();
             selectedMap.put(con.getPageNumber(), currentPageSelected);
         } else {
             selectedMap.put(con.getPageNumber(), currentPageSelected);
         }
-        List<Account> tmpSelectedAccList = new List<Account>();
-        if(isKeepSelected && selectedAccList != null) {
-             tmpSelectedAccList = selectedAccList;
+        List<SObject> tmpSelectedObjList = new List<SObject>();
+        if(isKeepSelected && selectedObjList != null) {
+             tmpSelectedObjList = selectedObjList;
         }
-        selectedAccList = new List<Account>();
+        selectedObjList = new List<SObject>();
         for(Integer i: selectedMap.keyset()) {
-            selectedAccList.addAll(selectedMap.get(i));
+            selectedObjList.addAll(selectedMap.get(i));
         }
-        if(isKeepSelected && tmpSelectedAccList.size() > 0){
-            selectedAccList.AddAll(tmpSelectedAccList);
+        if(isKeepSelected && tmpSelectedObjList.size() > 0){
+            selectedObjList.AddAll(tmpSelectedObjList);
         }
         
-        Set<Account> accSet = new Set<Account>(selectedAccList);
-        selectedAccList.clear();
-        selectedAccList.addAll(accSet);
+        Set<SObject> objSet = new Set<SObject>(selectedObjList);
+        selectedObjList.clear();
+        selectedObjList.addAll(objSet);
 
-        con.setSelected(selectedAccList);
+        con.setSelected(selectedObjList);
     }
 
     public Boolean isAllCheck() {

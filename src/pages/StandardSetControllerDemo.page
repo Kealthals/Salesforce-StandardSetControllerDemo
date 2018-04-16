@@ -21,7 +21,7 @@
                     </apex:facet>
                     <apex:inputCheckbox value="{!w.isChecked}" onclick="updateCount();"/>
                 </apex:column>
-                <apex:column value="{!w.acc.Id}" width="30%">
+                <apex:column value="{!w.valueList[0]}" width="30%">
                     <apex:facet name="header">
                         <apex:commandlink value="{!$ObjectType.Account.fields.Id.Label}{!IF(sortOrderKeep==$ObjectType.Account.fields.Id.Label + '△', '△', IF(sortOrderKeep==$ObjectType.Account.fields.Id.Label + '▽','▽',''))}" action="{!sort}" reRender="table">
                             <apex:param name="sortString" value="{!$ObjectType.Account.fields.Id.Label}{!IF(sortOrderKeep==$ObjectType.Account.fields.Id.Label + '△','▽',IF(sortOrderKeep==$ObjectType.Account.fields.Id.Label + '△','▽','△'))}" assignTo="{!sortOrderKeep}"/>
@@ -34,10 +34,7 @@
                             <apex:param name="sortString" value="{!$ObjectType.Account.fields.Name.Label}{!IF(sortOrderKeep==$ObjectType.Account.fields.Name.Label + '△','▽',IF(sortOrderKeep==$ObjectType.Account.fields.Name.Label + '△','▽','△'))}" assignTo="{!sortOrderKeep}"/>
                         </apex:commandlink>
                     </apex:facet>
-                    <apex:outputField value="{!w.acc.Name}" >
-                          <apex:inlineEditSupport event="ondblclick" showOnEdit="saveButton,cancelButton"
-                                hideOnEdit="backButton"/>
-                    </apex:outputField>
+                    <apex:outputText value="{!w.valueList[1]}"/>
                 </apex:column>
             </apex:pageBlockTable>
             <apex:outputPanel id="buttons">
