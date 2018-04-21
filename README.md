@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=master)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
+[![Build Status：Master](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=master)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
+[![Build Status：Release](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=Release)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
 # Salesforce-StandardSetControllerDemo
 
 A StantardSetController Demo
