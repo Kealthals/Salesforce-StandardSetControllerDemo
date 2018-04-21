@@ -1,25 +1,191 @@
 @isTest
 private class StandardSetDemoControllerTest {
-    static testMethod void testMethod1() {
+    static testMethod void testSetPageSize() {
+
         Test.StartTest();
 
         Test.setMock(HttpCalloutMock.class, new WebMock());
         StandardSetDemoController ssdCon = new StandardSetDemoController();
-        ssdCon.getWrappers();
-        ssdCon.first();
-        ssdCon.last();
-        ssdCon.previous();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 10;
+        ssdCon.setPaSize();
+        List<StandardSetDemoController.Wrapper> wList = ssdCon.getWrappers();
+
+        Test.StopTest();
+
+        System.assertEquals(wList.size(), 10);
+        System.assertEquals(ssdCon.con.getHasPrevious(), false);
+    }
+
+    static testMethod void testSetPage() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 10;
+        ssdCon.setPaSize();
+
+        ssdCon.pPage = 20;
+        ssdCon.gotoPage();
+        List<StandardSetDemoController.Wrapper> wList = ssdCon.getWrappers();
+
+        Test.StopTest();
+        
+        System.assertEquals(wList.size(), 10);
+        System.assertEquals(ssdCon.con.getHasNext(), false);
+    }
+
+    static testMethod void testNext() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 90;
+        ssdCon.setPaSize();
+
+        Test.StopTest();
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+        System.assertEquals(ssdCon.currentPageNo, 1);
         ssdCon.next();
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+        System.assertEquals(ssdCon.currentPageNo, 2);
+        ssdCon.next();
+        System.assertEquals(ssdCon.getWrappers().size(), 20);
+        System.assertEquals(ssdCon.currentPageNo, 3);
+        ssdCon.first();
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+        System.assertEquals(ssdCon.currentPageNo, 1);
+    }
+
+    static testMethod void testPrevious() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 90;
+        ssdCon.setPaSize();
+        ssdCon.last();
+        Test.StopTest();
+
+        System.assertEquals(ssdCon.getWrappers().size(), 20);
+        ssdCon.previous();
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+        ssdCon.previous();
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+    }
+
+    static testMethod void testCheck() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 90;
+        ssdCon.setPaSize();
+
+        Test.StopTest();
+
+        System.assertEquals(ssdCon.getWrappers().size(), 90);
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        ssdCon.getWrappers()[0].isChecked = true;
+        ssdCon.next();
+        ssdCon.getWrappers();
+        ssdCon.previous();
+        System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.selectedCount, 1);
+
+        ssdCon.last();
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test199');
+        ssdCon.getWrappers()[19].isChecked = true;
+        ssdCon.previous();
+        ssdCon.getWrappers();
+        ssdCon.next();
+        System.assertEquals(ssdCon.getWrappers()[19].isChecked, true);
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test199');
+        System.assertEquals(ssdCon.selectedCount, 2);
+
+        ssdCon.first();
+        System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.selectedCount, 2);
+
+        ssdCon.last();
+        System.assertEquals(ssdCon.getWrappers()[19].isChecked, true);
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test199');
+        System.assertEquals(ssdCon.selectedCount, 2);
+
+    }
+    static testMethod void testSort() {
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();  
+        ssdCon.pSize = 90;
+        ssdCon.setPaSize();
+        ssdCon.getWrappers(); 
+        ssdCon.sortOrderKeep = Schema.getGlobalDescribe().get('Account').getDescribe().fields.getMap().get('Name').getDescribe().getLabel() + '△';
+        ssdCon.sort();
+        ssdCon.getWrappers();
+        Test.StopTest();
+
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        ssdCon.getWrappers()[0].isChecked = true;
+
+        ssdCon.last();
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test99');
+        System.assertEquals(ssdCon.getWrappers()[19].isChecked, false);
+        System.assertEquals(ssdCon.selectedCount, 1);
+
+        ssdCon.getWrappers()[19].isChecked = true;
+        ssdCon.first();
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
+        System.assertEquals(ssdCon.selectedCount, 2);
+
+        ssdCon.sortOrderKeep = Schema.getGlobalDescribe().get('Account').getDescribe().fields.getMap().get('Name').getDescribe().getLabel() + '▽';
+        ssdCon.sort();
+
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test99');
+        System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
+        System.assertEquals(ssdCon.selectedCount, 2); 
+
+        ssdCon.last();
+
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[19].isChecked, false);
+        System.assertEquals(ssdCon.selectedCount, 2);
+    }
+    static testMethod void test() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers(); //1
+        ssdCon.first(); //1
+        ssdCon.last(); //1
+        ssdCon.previous(); //1
+        ssdCon.next(); //1
         ssdCon.save();
         ssdCon.toggleAll();
         ssdCon.updateCount();
-        ssdCon.go();
-        ssdCon.pSize = 500;
-        ssdCon.setPaSize();
-        ssdCon.pPage = 1;
-        ssdCon.gotoPage();      
+        ssdCon.go(); //1
+        ssdCon.pSize = 500; //1
+        ssdCon.setPaSize(); //1
+        ssdCon.pPage = 1; //1
+        ssdCon.gotoPage();       //1
         Test.StopTest();
     }
+
     @TestSetup
     static void setupData() {
         List<Account> insertAccList = new List<Account>();
