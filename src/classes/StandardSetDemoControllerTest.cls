@@ -89,17 +89,18 @@ private class StandardSetDemoControllerTest {
         ssdCon.getWrappers();  
         ssdCon.pSize = 90;
         ssdCon.setPaSize();
-
+        ssdCon.sortOrderKeep = Schema.Account.Name.getDescribe().getLabel() + '△';
+        ssdCon.sort();
         Test.StopTest();
 
         System.assertEquals(ssdCon.getWrappers().size(), 90);
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test000');
         ssdCon.getWrappers()[0].isChecked = true;
         ssdCon.next();
         ssdCon.getWrappers();
         ssdCon.previous();
         System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test000');
         System.assertEquals(ssdCon.selectedCount, 1);
 
         ssdCon.last();
@@ -114,7 +115,7 @@ private class StandardSetDemoControllerTest {
 
         ssdCon.first();
         System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test000');
         System.assertEquals(ssdCon.selectedCount, 2);
 
         ssdCon.last();
@@ -137,17 +138,17 @@ private class StandardSetDemoControllerTest {
         ssdCon.getWrappers();
         Test.StopTest();
 
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test000');
         ssdCon.getWrappers()[0].isChecked = true;
 
         ssdCon.last();
-        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test99');
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test199');
         System.assertEquals(ssdCon.getWrappers()[19].isChecked, false);
         System.assertEquals(ssdCon.selectedCount, 1);
 
         ssdCon.getWrappers()[19].isChecked = true;
         ssdCon.first();
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test000');
         System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2);
 
@@ -155,13 +156,13 @@ private class StandardSetDemoControllerTest {
         ssdCon.sortOrderKeep = Schema.Account.Name.getDescribe().getLabel() + '▽';
         ssdCon.sort();
 
-        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test99');
+        System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test199');
         System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2); 
 
         ssdCon.last();
 
-        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test0');
+        System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test000');
         System.assertEquals(ssdCon.getWrappers()[19].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2);
     }
@@ -192,7 +193,7 @@ private class StandardSetDemoControllerTest {
         List<Account> insertAccList = new List<Account>();
         for(Integer i = 0; i < 200; i++) {
             Account acc = new Account();
-            acc.Name = 'Test' + i;
+            acc.Name = 'Test' + String.valueOf(i).leftPad(3,'0');
             insertAccList.add(acc);
         }
 
