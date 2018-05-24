@@ -1,5 +1,5 @@
-[![Build Status：Master](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=master)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
-[![Build Status：Release](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=Release)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
+Master:[![Build Status：Master](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=master)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
+Release:[![Build Status：Release](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo.svg?branch=Release)](https://travis-ci.org/Kealthals/Salesforce-StandardSetControllerDemo)
 # Salesforce-StandardSetControllerDemo
 
 A StantardSetController Demo
@@ -37,8 +37,8 @@ Used Method List:
 
 ## HOW TO USE
 
-1. git clone https://github.com/Kealthals/Salesforce-StandardSetController.git
+1. git clone https://github.com/Kealthals/Salesforce-StandardSetControllerDemo.git
 2. Deploy to your Org
-3. Open VF via https://[yourInstanceName].salesforce.com/apex/testStandardSet
+3. Open VF via https://[yourInstanceName].salesforce.com/apex/StandardSetControllerDemo
 4. If no any records in the list. Insert some Accounts. We just need Id and Name columns.
 5. Enjoy!
