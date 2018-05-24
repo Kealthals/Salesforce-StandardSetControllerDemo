@@ -42,8 +42,17 @@ public class StandardSetDemoController {
             Schema.SObjectType targetType = Schema.getGlobalDescribe().get('Account');
 
             Map<String, Schema.SObjectField> fieldsMap = targetType.getDescribe().fields.getMap(); // Schema.SOjectType.Account.fields.getMap();
+
+            Set<String> fieldsList = new Set<String>();
+            fieldsList.add('id');
+            fieldsList.add('name');
+            fieldsList.add('createddate');
+
             for(String fName:fieldsMap.keyset()) {
-                labelNameMap.put(fieldsMap.get(fName).getDescribe().getLabel(), fName);
+                if(fieldsList.contains(fName)) {
+                    labelNameMap.put(fieldsMap.get(fName).getDescribe().getLabel(), fName);
+                }
+
             }
 
             String queryFields = String.join(new List<String>(fieldsMap.keyset()), ',');
@@ -120,6 +129,7 @@ public class StandardSetDemoController {
             for(Integer i: sortInt) {
                 showObjList.add(objMap.get(i));
             }
+
             try{
                 con = new ApexPages.StandardSetController(showObjList);
             } catch(Exception e) {
@@ -137,8 +147,17 @@ public class StandardSetDemoController {
                 pSize = con.getPageSize();
             }
             con.setPageSize(pSize);
-            totalPageNo = (con.getResultSize() / pSize) + 1;
-            
+
+            Integer totalCount = con.getResultSize();
+            if(totalCount <= pSize) {
+                totalPageNo = 1;
+            } else {
+                totalPageNo = (totalCount / pSize);
+                if(Math.mod(totalCount, pSize) != 0) {
+                    totalPageNo++;
+                }
+            }
+
             if(isKeepSelected) {
                 System.debug(selectedObjList);
                 con.setSelected(selectedObjList);
@@ -185,21 +204,25 @@ public class StandardSetDemoController {
     }
 
     public void first() {
+        isKeepSelected = true;
         handleSelectedList();
         con.first();
     }
 
     public void previous() {
+        isKeepSelected = true;
         handleSelectedList();
         con.previous();
     }
 
     public void next() {
+        isKeepSelected = true;
         handleSelectedList();
         con.next();
     }
 
     public void last() {
+        isKeepSelected = true;
         handleSelectedList();
         con.last();
     }
@@ -232,10 +255,15 @@ public class StandardSetDemoController {
         if(isKeepSelected && tmpSelectedObjList.size() > 0){
             selectedObjList.AddAll(tmpSelectedObjList);
         }
-        
-        Set<SObject> objSet = new Set<SObject>(selectedObjList);
+
+        Map<Id, SObject> objMap = new Map<Id, SObject>();
+
+        for(SObject obj:selectedObjList) {
+            objMap.put(obj.Id, obj);
+        }
+
         selectedObjList.clear();
-        selectedObjList.addAll(objSet);
+        selectedObjList.addAll(objMap.values());
 
         con.setSelected(selectedObjList);
     }
@@ -319,6 +347,7 @@ public class StandardSetDemoController {
     }
 
     public void sort() {
+
         isKeepSelected = true;
         handleSelectedList();
         con = null;

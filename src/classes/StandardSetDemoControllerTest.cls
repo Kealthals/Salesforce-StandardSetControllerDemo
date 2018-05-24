@@ -151,7 +151,8 @@ private class StandardSetDemoControllerTest {
         System.assertEquals(ssdCon.getWrappers()[0].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2);
 
-        ssdCon.sortOrderKeep = Schema.getGlobalDescribe().get('Account').getDescribe().fields.getMap().get('Name').getDescribe().getLabel() + '▽';
+        //ssdCon.sortOrderKeep = Schema.getGlobalDescribe().get('Account').getDescribe().fields.getMap().get('Name').getDescribe().getLabel() + '▽';
+        ssdCon.sortOrderKeep = Schema.Account.Name.getDescribe().getLabel() + '▽';
         ssdCon.sort();
 
         System.assertEquals(ssdCon.getWrappers()[0].valueList[1], 'Test99');
@@ -161,7 +162,7 @@ private class StandardSetDemoControllerTest {
         ssdCon.last();
 
         System.assertEquals(ssdCon.getWrappers()[19].valueList[1], 'Test0');
-        System.assertEquals(ssdCon.getWrappers()[19].isChecked, false);
+        System.assertEquals(ssdCon.getWrappers()[19].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2);
     }
     static testMethod void test() {
