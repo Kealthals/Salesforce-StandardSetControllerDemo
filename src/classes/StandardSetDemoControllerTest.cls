@@ -166,25 +166,39 @@ private class StandardSetDemoControllerTest {
         System.assertEquals(ssdCon.getWrappers()[19].isChecked, true);
         System.assertEquals(ssdCon.selectedCount, 2);
     }
-    static testMethod void test() {
+    static testMethod void testToggleAll() {
+
+        Test.StartTest();
+
+        Test.setMock(HttpCalloutMock.class, new WebMock());
+        StandardSetDemoController ssdCon = new StandardSetDemoController();
+        ssdCon.getWrappers();
+        ssdCon.toggleAll();
+        ssdCon.toggleAll();
+        Test.StopTest();
+    }
+
+    static testMethod void testOthers() {
 
         Test.StartTest();
 
         Test.setMock(HttpCalloutMock.class, new WebMock());
         StandardSetDemoController ssdCon = new StandardSetDemoController();
         ssdCon.getWrappers(); //1
-        ssdCon.first(); //1
-        ssdCon.last(); //1
-        ssdCon.previous(); //1
-        ssdCon.next(); //1
-        ssdCon.save();
-        ssdCon.toggleAll();
+        List<SelectOption> listViewList = ssdCon.con.getListViewOptions();
+        ssdCon.con.setFilterId(listViewList[1].getValue());
+        ssdCon.go();
         ssdCon.updateCount();
-        ssdCon.go(); //1
-        ssdCon.pSize = 500; //1
-        ssdCon.setPaSize(); //1
-        ssdCon.pPage = 1; //1
-        ssdCon.gotoPage();       //1
+        ssdCon.save();
+        ssdCon.pSize = 0;
+        ssdCon.setPaSize();
+        ssdCon.pSize = 1001;
+        ssdCon.setPaSize();  
+        ssdCon.pPage = 0;
+        ssdCon.gotoPage();
+        ssdCon.pPage = 1000;
+        ssdCon.gotoPage();
+
         Test.StopTest();
     }
 
